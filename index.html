@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CareMATE — All-in-One</title>
+  <script src="https://kit.fontawesome.com/a72fef1bd6.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root{
+      --primary:#0066cc;
+      --bg:#f3f6fb;
+      --muted:#6b7280;
+      --card-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      --radius:10px;
+      --text:#111;
+      --surface:#ffffff;
+    }
+    [data-theme="dark"]{
+      --primary:#33aaff;
+      --bg:#071227;
+      --muted:#9aa8bd;
+      --card-shadow: 0 8px 26px rgba(0,0,0,0.45);
+      --text:#e6eef7;
+      --surface:#0f1a2a;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      transition:background .25s,color .25s;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    a{cursor:pointer}
+
+    /* HEADER */
+    header{
+      background:var(--primary);
+      color:white;
+      padding:12px 18px;
+      position:sticky;
+      top:0;
+      z-index:120;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .head-left{display:flex;align-items:center;gap:12px}
+    .head-left img{height:44px;border-radius:8px;object-fit:cover}
+    .brand-title{font-weight:800;font-size:18px}
+    .head-right{display:flex;align-items:center;gap:10px}
+    .theme-btn{background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;padding:6px}
+    .hamburger{display:none;background:transparent;border:none;color:#fff;font-size:20px;padding:6px;cursor:pointer}
+
+    /* NAV (desktop quick links & tip) */
+    .nav-quick{display:flex;align-items:center;gap:12px}
+    .nav-item{color:#fff;font-weight:600;display:flex;align-items:center;gap:8px}
+    .health-tip-mini{background:rgba(255,255,255,0.08);padding:8px;border-radius:8px;color:#fff;display:flex;align-items:center;gap:8px;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* PROFILE */
+    .profile-wrap{position:relative}
+    .profile-button{background:rgba(255,255,255,0.08);color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;gap:8px;align-items:center}
+    .profile-dropdown{position:absolute;right:0;top:46px;background:var(--surface);color:var(--text);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);display:none;min-width:160px;overflow:hidden}
+    .profile-dropdown a{display:block;padding:10px 12px;text-decoration:none;color:var(--text)}
+    .profile-dropdown a:hover{background:rgba(0,0,0,0.04)}
+
+    /* APP LAYOUT */
+    .app{display:flex;min-height:calc(100vh - 64px)}
+    .sidebar{
+      width:260px;
+      background:var(--surface);
+      padding:18px;
+      border-right:1px solid rgba(0,0,0,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .brand-small{font-weight:800;color:var(--primary);font-size:18px}
+    .side-section-title{font-size:13px;color:var(--muted);padding-top:4px}
+    .side-link{
+      display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;color:var(--text);
+      text-decoration:none;cursor:pointer;
+    }
+    .side-link:hover{background:rgba(0,102,204,0.06)}
+    .side-link.active{background:linear-gradient(90deg,var(--primary),#004d99);color:#fff}
+
+    .main{flex:1;padding:22px;min-height:calc(100vh - 64px);background:transparent}
+
+    .card{background:var(--surface);padding:16px;border-radius:var(--radius);box-shadow:var(--card-shadow)}
+    .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    label{font-weight:600;margin-bottom:6px;display:block}
+    input,select,textarea{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);width:100%;background:transparent;color:var(--text)}
+    button{background:var(--primary);color:#fff;padding:10px 14px;border:none;border-radius:8px;cursor:pointer}
+    .secondary-btn{background:#eee;color:#222;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04)}
+    .small{font-size:13px;color:var(--muted)}
+
+    .doc-card{background:var(--surface);padding:12px;border-radius:12px;text-align:center;box-shadow:var(--card-shadow)}
+    .doc-card img{width:84px;height:84px;border-radius:50%;object-fit:cover;margin-bottom:8px}
+    .appt-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.03);margin-bottom:8px}
+    .record-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;border-left:4px solid var(--primary);background:rgba(0,102,204,0.03);margin-bottom:8px}
+
+    /* footer */
+    footer.footer{
+      background:var(--primary);
+      color:#fff;
+      padding:28px 18px;
+      margin-top:20px;
+    }
+    .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:1100px;margin:auto}
+
+    /* hero */
+    .hero{background:linear-gradient(180deg, rgba(0,102,204,0.06), transparent);padding:22px;border-radius:12px}
+    .hero-content{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .hero-btn{display:inline-block;background:var(--primary);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none}
+
+    /* stars */
+    .stars{display:inline-block}
+    .star{font-size:18px;cursor:pointer;opacity:0.35;padding:2px}
+    .star.active{opacity:1;color:#ffbb33}
+
+    /* reminder toast */
+    .toast-wrap{position:fixed;right:16px;bottom:16px;z-index:9999;min-width:260px;max-width:360px}
+    .toast-card{padding:12px;border-radius:10px;box-shadow:var(--card-shadow);background:var(--surface);color:var(--text);border-left:4px solid var(--primary)}
+
+    /* responsive */
+    @media(max-width:900px){
+      .hamburger{display:inline-block}
+      .nav-quick{display:none}
+      .sidebar{position:fixed;left:-300px;top:64px;height:calc(100vh - 64px);transition:left .25s;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+      .sidebar.active{left:0}
+      .app{flex-direction:column}
+      .main{padding:16px}
+      footer.footer{text-align:center}
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="head-left">
+      <img src="caremate_logo.png" alt="CareMATE" onerror="this.style.display='none'">
+      <div>
+        <div class="brand-title">CareMATE</div>
+        <div class="small" style="opacity:0.9 ;color: #9aa8bd;">Digital appointments & records</div>
+      </div>
+    </div>
+
+    <div class="head-right">
+      <div class="nav-quick" id="navQuick">
+        <div class="nav-item nav-link" onclick="navigateTo('home')"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="nav-item nav-link" onclick="navigateTo('doctor_list')"><i class="fa-solid fa-user-doctor"></i> Doctors</div>
+        <div id="miniTip" class="health-tip-mini" title="Random health tip">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <div id="headerTipText">Loading tip...</div>
+          <button class="secondary-btn" onclick="refreshHealthTipNow()" style="margin-left:8px">⟳</button>
+        </div>
+      </div>
+
+      <button class="theme-btn" id="themeToggle" title="Toggle theme">🌙</button>
+
+      <div id="authArea" style="display:flex;align-items:center;gap:8px">
+        <div id="signinBtnWrap">
+          <button class="secondary-btn" onclick="navigateTo('auth')">Sign in / Sign up</button>
+        </div>
+        <div class="profile-wrap" id="profileWrap" style="display:none">
+          <button class="profile-button" id="profileBtn" onclick="toggleProfileDropdown()">
+            <i class="fa-solid fa-user"></i>
+            <span id="profileName">User</span>
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div id="profileDropdown" class="profile-dropdown">
+            <a onclick="openProfile()">Dashboard</a>
+            <a onclick="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebarMobile()"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- Toast / reminder -->
+  <div id="toastWrap" class="toast-wrap" style="display:none"></div>
+
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar" style="display:none">
+      <div class="brand-small">CareMATE</div>
+      <div id="sbWelcome" class="small">Welcome</div>
+
+      <!-- patient links -->
+      <div id="patientSidebar" style="display:none">
+        <div class="side-section-title">Patient</div>
+        <div id="sbPatientHome" class="side-link" onclick="showDashboardTab('patient','overview')"><i class="fa-solid fa-house"></i> Overview</div>
+        <div id="sbFindDoctors" class="side-link" onclick="showDashboardTab('patient','doctors')"><i class="fa-solid fa-user-doctor"></i> Find Doctors</div>
+        <div id="sbBook" class="side-link" onclick="showDashboardTab('patient','book')"><i class="fa-solid fa-calendar-plus"></i> Book Appointment</div>
+        <div id="sbRecords" class="side-link" onclick="showDashboardTab('patient','records')"><i class="fa-solid fa-file-medical"></i> My Records</div>
+      </div>
+
+      <!-- doctor links -->
+      <div id="doctorSidebar" style="display:none">
+        <div class="side-section-title">Doctor</div>
+        <div id="sbDoctorHome" class="side-link" onclick="showDashboardTab('doctor','overview')"><i class="fa-solid fa-stethoscope"></i> Overview</div>
+        <div id="sbManage" class="side-link" onclick="showDashboardTab('doctor','manage')"><i class="fa-solid fa-calendar-check"></i> Manage Appointments</div>
+        <div id="sbUpload" class="side-link" onclick="showDashboardTab('doctor','upload')"><i class="fa-solid fa-file-upload"></i> Upload Records</div>
+        <div id="sbProfile" class="side-link" onclick="showDashboardTab('doctor','profile')"><i class="fa-solid fa-user"></i> Profile</div>
+      </div>
+
+      <div style="margin-top:auto">
+        <div class="side-link" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- HOME -->
+      <section id="section-home">
+        <div class="hero card">
+          <div class="hero-content">
+            <div style="max-width:640px">
+              <h1 style="margin:0 0 8px 0">Your Health, Our Priority</h1>
+              <p style="margin:0 0 12px 0">Book appointments, manage records, and connect with trusted doctors — all in one place.</p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <a class="hero-btn" onclick="navigateTo('book')">Book Appointment</a>
+                <a class="secondary-btn" onclick="navigateTo('doctor_list')">Find Doctors</a>
+              </div>
+            </div>
+            <div style="width:350px">
+              <div class="card" style="text-align:center">
+                <h3 style="color:var(--primary);margin:6px 0">CareMATE</h3>
+                <div class="small">Demo: appointments & records (local)</div>
+                <div style="margin-top:12px" class="health-tip-mini">
+                  <i class="fa-solid fa-lightbulb"></i>
+                  <div id="homeTipText" style="font-weight:700">Loading tip...</div>
+                </div>
+                <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+                  <button class="secondary-btn" onclick="refreshHealthTipNow()">Refresh Tip</button>
+                  <button class="secondary-btn" id="toggleTipBtn" onclick="toggleTipAutoRefresh()">Pause Tips</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="why-choose-us" style="margin-top:18px">
+          <div class="card">
+            <h2 style="margin-top:0">Why choose CareMATE?</h2>
+            <div class="grid-3" style="margin-top:12px">
+              <div class="why-card card"><i class="fa-solid fa-calendar-check" style="font-size:22px;color:var(--primary)"></i><h4>Easy Booking</h4><p class="small">Appointments in a few clicks.</p></div>
+              <div class="why-card card"><i class="fa-solid fa-user-md" style="font-size:22px;color:var(--primary)"></i><h4>Trusted Doctors</h4><p class="small">Qualified specialists.</p></div>
+              <div class="why-card card"><i class="fa-solid fa-clock" style="font-size:22px;color:var(--primary)"></i><h4>Save Time</h4><p class="small">Avoid long queues.</p></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- DOCTOR LIST (public) -->
+      <section id="section-doctor_list" style="display:none;margin-top:10px">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h2 style="margin:0;color:#003366">Find Doctors</h2>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="searchDocInput" placeholder="Search name or specialty" style="padding:8px;border-radius:8px;border:1px solid #ddd" oninput="renderDoctorList()">
+              <select id="filterDept" style="padding:8px;border-radius:8px;border:1px solid #ddd" onchange="renderDoctorList()">
+                <option value="">All Departments</option>
+              </select>
+            </div>
+          </div>
+          <div id="doctorGrid" class="grid-3" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <!-- BOOK -->
+      <section id="section-book" style="display:none;margin-top:10px">
+        <div class="card">
+          <h2 style="margin:0 0 10px 0;color:#003366">Book Appointment</h2>
+          <div class="grid-2">
+            <div>
+              <label>Select Doctor:</label>
+              <select id="bookDoctor" required></select>
+              <div class="form-row"><label>Date</label><input id="bookDate" type="date"></div>
+              <div class="form-row"><label>Time</label><input id="bookTime" type="time"></div>
+              <div class="form-row"><label>Your Name</label><input id="bookName" placeholder="Full name"></div>
+              <div class="form-row"><label>Your Email</label><input id="bookEmail" type="email" placeholder="Email"></div>
+              <div style="display:flex;gap:8px;margin-top:8px"><button onclick="handleBooking()">Confirm Booking</button><button class="secondary-btn" onclick="clearBookingForm()">Clear</button></div>
+              <div id="bookMsg" class="small" style="margin-top:8px;color:#b00"></div>
+            </div>
+
+            <div>
+              <div class="card">
+                <h4 style="margin-top:0">How it works</h4>
+                <ol style="padding-left:18px;color:var(--muted)"><li>Choose a doctor</li><li>Pick date & time</li><li>Login as patient to save to your account</li></ol>
+                <div style="margin-top:10px"><button class="secondary-btn" onclick="navigateTo('auth')">Signup / Login</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECORDS (public search) -->
+      <section id="section-records" style="display:none;margin-top:10px">
+        <div class="card">
+          <h2 style="margin:0 0 10px 0;color:#003366">Health Records (Search by email)</h2>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input id="recordsEmail" placeholder="Patient email to search" style="padding:8px;border-radius:8px;border:1px solid #ddd">
+            <button onclick="searchRecords()">Search</button>
+          </div>
+          <div id="recordsList"></div>
+        </div>
+      </section>
+
+      <!-- AUTH -->
+      <section id="section-auth" style="display:none;margin-top:10px">
+        <div class="card">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+            <!-- LOGIN -->
+            <div>
+              <h3 style="margin:0 0 8px 0;color:#003366">Login</h3>
+              <div class="form-row"><label>Email</label><input id="loginEmail" type="email"></div>
+              <div class="form-row"><label>Password</label><input id="loginPassword" type="password"></div>
+              <div class="form-row"><label>Role</label><select id="loginRole"><option value="patient">Patient</option><option value="doctor">Doctor</option></select></div>
+              <div style="display:flex;gap:8px"><button onclick="login()">Login</button><button class="secondary-btn" onclick="navigateTo('home')">Back</button></div>
+              <div id="loginMsg" class="small" style="color:#b00;margin-top:8px"></div>
+            </div>
+
+            <!-- SIGNUP -->
+            <div>
+              <h3 style="margin:0 0 8px 0;color:#003366">Signup</h3>
+              <div class="form-row"><label>Role</label>
+                <div style="display:flex;gap:8px"><label><input type="radio" name="signupRole" value="patient" checked> Patient</label><label><input type="radio" name="signupRole" value="doctor"> Doctor</label></div>
+              </div>
+              <div class="form-row"><label>Name</label><input id="signupName"></div>
+              <div class="form-row"><label>Email</label><input id="signupEmail" type="email"></div>
+              <div class="form-row"><label>Password</label><input id="signupPassword" type="password"></div>
+              <div id="signupExtras"></div>
+              <div style="display:flex;gap:8px"><button onclick="signup()">Signup</button><button class="secondary-btn" onclick="clearSignup()">Clear</button></div>
+              <div id="signupMsg" class="small" style="color:#b00;margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD (combined) -->
+      <section id="section-dashboard" style="display:none;margin-top:10px">
+        <!-- Patient overview -->
+        <div id="patient-overview" class="card" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><h2 style="margin:0">Patient Dashboard</h2><div class="small" id="patientWelcome"></div></div>
+            <div><button onclick="showDashboardTab('patient','book')">Book Appointment</button></div>
+          </div>
+          <div style="margin-top:12px">
+            <h4 style="margin:0 0 8px 0;color:var(--muted)">Upcoming Appointments</h4>
+            <div id="patientAppts"></div>
+          </div>
+        </div>
+
+        <!-- patient doctors -->
+        <div id="patient-doctors" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">Available Doctors</h3>
+          <div id="patientDoctorGrid" class="grid-3"></div>
+        </div>
+
+        <!-- patient book -->
+        <div id="patient-book" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">Quick Book</h3>
+          <div class="grid-2">
+            <div>
+              <label>Doctor</label><select id="dashBookDoctor"></select>
+              <div class="form-row"><label>Date</label><input id="dashBookDate" type="date"></div>
+              <div class="form-row"><label>Time</label><input id="dashBookTime" type="time"></div>
+              <div style="display:flex;gap:8px"><button onclick="handleDashBooking()">Book</button><button class="secondary-btn" onclick="clearDashBook()">Clear</button></div>
+              <div id="dashBookMsg" class="small" style="margin-top:8px;color:#b00"></div>
+            </div>
+            <div>
+              <div class="card"><div class="small">Booked appointments appear in your Upcoming list. Doctors can accept / reject.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- patient records -->
+        <div id="patient-records" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">My Records</h3>
+          <div id="patientRecordList"></div>
+        </div>
+
+        <!-- doctor overview -->
+        <div id="doctor-overview" class="card" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><h2 style="margin:0">Doctor Dashboard</h2><div class="small" id="doctorWelcome"></div></div>
+          </div>
+          <div style="margin-top:12px">
+            <h4 style="margin:0 0 8px 0;color:var(--muted)">Today's Requests & Appointments</h4>
+            <div id="doctorAppts"></div>
+          </div>
+        </div>
+
+        <!-- doctor manage -->
+        <div id="doctor-manage" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">Manage Appointments</h3>
+          <div id="manageList"></div>
+        </div>
+
+        <!-- doctor upload -->
+        <div id="doctor-upload" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">Upload Patient Record (Dummy)</h3>
+          <div style="max-width:520px">
+            <div class="form-row"><label>Patient Email</label><input id="uploadPatientEmail" type="email"></div>
+            <div class="form-row"><label>Title</label><input id="uploadTitle"></div>
+            <div style="display:flex;gap:8px"><button onclick="uploadRecord()">Upload</button><button class="secondary-btn" onclick="clearUpload()">Clear</button></div>
+            <div id="uploadMsg" class="small" style="color:#b00;margin-top:8px"></div>
+          </div>
+        </div>
+
+        <!-- doctor profile -->
+        <div id="doctor-profile" class="card" style="display:none;margin-top:12px">
+          <h3 style="margin-top:0">Edit Profile</h3>
+          <div style="max-width:560px">
+            <div class="form-row"><label>Name</label><input id="docProfName"></div>
+            <div class="form-row"><label>Specialty</label><input id="docProfSpecialty"></div>
+            <div class="form-row"><label>Experience (yrs)</label><input id="docProfExp" type="number"></div>
+            <div style="display:flex;gap:8px"><button onclick="saveDoctorProfile()">Save</button><button class="secondary-btn" onclick="resetDoctorProfile()">Reset</button></div>
+            <div id="docProfMsg" class="small" style="color:#070;margin-top:8px"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- notfound -->
+      <section id="section-notfound" style="display:none;margin-top:10px">
+        <div class="card"><h2>Page not found</h2><p class="small">Use the navigation.</p></div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer" style="margin-top:24px">
+        <div class="footer-grid">
+          <div>
+            <h3 style="margin:0">CareMATE</h3>
+            <p class="small" style="margin:6px 0 0 0;color: white;" >Trusted appointment & health records demo.</p>
+          </div>
+          <div>
+            <h4 style="margin:0 0 8px 0">Quick Links</h4>
+            <div class="small"><a onclick="navigateTo('home')" style="color:#fff">Home</a></div>
+            <div class="small"><a onclick="navigateTo('doctor_list')" style="color:#fff">Doctor List</a></div>
+            <div class="small"><a onclick="navigateTo('book')" style="color:#fff">Book</a></div>
+          </div>
+          <div>
+            <h4 style="margin:0 0 8px 0"style="color:#fff">Contact</h4>
+            <div class="small"style="color:#fff">+91 9699928260</div>
+            <div class="small"style="color:#fff">support@caremate.com</div>
+            <div class="small"style="color:#fff">Kopargaon, India</div>
+          </div>
+          <div>
+            <h4 style="margin:0 0 8px 0"style="color:#fff">Follow</h4>
+            <div style="display:flex;gap:8px"><a style="color:#fff"><i class="fa-brands fa-facebook"></i></a><a style="color:#fff"><i class="fa-brands fa-twitter"></i></a><a style="color:#fff"><i class="fa-brands fa-linkedin"></i></a></div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:12px;font-size:13px"style="color:#fff">© 2025 CareMATE. All Rights Reserved.</div>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    /***********************
+     * LocalStorage helpers
+     ***********************/
+    function initData(){
+      if(!localStorage.getItem('care_doctors')){
+        const d = [
+          {id:'d1',name:'Dr. Mehta',specialty:'Cardiology',experience:10,fee:1200},
+          {id:'d2',name:'Dr. Sharma',specialty:'Dermatology',experience:7,fee:800},
+          {id:'d3',name:'Dr. Patil',specialty:'Orthopedic',experience:9,fee:900},
+          {id:'d4',name:'Dr. Rao',specialty:'Pediatrics',experience:6,fee:700}
+        ];
+        localStorage.setItem('care_doctors', JSON.stringify(d));
+      }
+      if(!localStorage.getItem('care_users')) localStorage.setItem('care_users', JSON.stringify([]));
+      if(!localStorage.getItem('care_appointments')) localStorage.setItem('care_appointments', JSON.stringify([]));
+      if(!localStorage.getItem('care_ratings')) localStorage.setItem('care_ratings', JSON.stringify({}));
+      if(!localStorage.getItem('care_theme')) localStorage.setItem('care_theme','light');
+    }
+
+    function getDoctors(){ return JSON.parse(localStorage.getItem('care_doctors') || '[]'); }
+    function saveDoctors(d){ localStorage.setItem('care_doctors', JSON.stringify(d)); }
+    function getUsers(){ return JSON.parse(localStorage.getItem('care_users') || '[]'); }
+    function saveUsers(u){ localStorage.setItem('care_users', JSON.stringify(u)); }
+    function getAppointments(){ return JSON.parse(localStorage.getItem('care_appointments') || '[]'); }
+    function saveAppointments(a){ localStorage.setItem('care_appointments', JSON.stringify(a)); }
+    function getRatings(){ return JSON.parse(localStorage.getItem('care_ratings') || '{}'); }
+    function saveRatings(r){ localStorage.setItem('care_ratings', JSON.stringify(r)); }
+    function getAuth(){ return JSON.parse(localStorage.getItem('care_auth') || 'null'); }
+    function setAuth(u){ localStorage.setItem('care_auth', JSON.stringify(u)); }
+    function clearAuth(){ localStorage.removeItem('care_auth'); }
+
+    /***********************
+     * THEME
+     ***********************/
+    function applyTheme(theme){
+      document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+      document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('care_theme', theme);
+    }
+    function toggleTheme(){
+      const cur = localStorage.getItem('care_theme') || 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    }
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+    /***********************
+     * HEALTH TIPS
+     ***********************/
+    const HEALTH_TIPS = [
+      "Drink 8 glasses of water daily.",
+      "Take a 10-minute walk after meals.",
+      "Aim for 7–8 hours of sleep nightly.",
+      "Add fruits & veggies to half your plate.",
+      "Stand and stretch every hour if seated.",
+      "Practice deep breathing for 2 minutes.",
+      "Wash hands regularly to prevent infections.",
+      "Limit screens 30 minutes before bed.",
+      "Include protein in each meal.",
+      "Schedule routine health check-ups."
+    ];
+    let tipInterval = null;
+    let tipAuto = true;
+    function pickTip(){ return HEALTH_TIPS[Math.floor(Math.random()*HEALTH_TIPS.length)]; }
+    function refreshHealthTipNow(){
+      const t = pickTip();
+      const header = document.getElementById('headerTipText');
+      const home = document.getElementById('homeTipText');
+      if(header) header.textContent = t;
+      if(home) home.textContent = t;
+    }
+    function startTipAuto(){
+      if(tipInterval) clearInterval(tipInterval);
+      tipInterval = setInterval(()=>{ if(tipAuto) refreshHealthTipNow(); }, 10000);
+    }
+    function toggleTipAutoRefresh(){
+      tipAuto = !tipAuto;
+      document.getElementById('toggleTipBtn').textContent = tipAuto ? 'Pause Tips' : 'Resume Tips';
+    }
+
+    /***********************
+     * NAV & UI helpers
+     ***********************/
+    const sections = {
+      home: document.getElementById('section-home'),
+      doctor_list: document.getElementById('section-doctor_list'),
+      book: document.getElementById('section-book'),
+      records: document.getElementById('section-records'),
+      auth: document.getElementById('section-auth'),
+      dashboard: document.getElementById('section-dashboard'),
+      notfound: document.getElementById('section-notfound')
+    };
+    function hideAll(){ Object.values(sections).forEach(s=>s.style.display='none'); }
+    function navigateTo(page){
+      hideAll();
+      // hide profile dropdown
+      document.getElementById('profileDropdown').style.display = 'none';
+      if(page==='home') sections.home.style.display='block';
+      else if(page==='doctor_list'){ sections.doctor_list.style.display='block'; renderDoctorList(); }
+      else if(page==='book'){ sections.book.style.display='block'; populateBookDoctors(); }
+      else if(page==='records'){ sections.records.style.display='block'; document.getElementById('recordsList').innerHTML=''; }
+      else if(page==='auth'){ sections.auth.style.display='block'; renderSignupExtras(); }
+      else if(page==='dashboardPublic'){ const a = getAuth(); if(!a) { sections.auth.style.display='block'; renderSignupExtras(); } else openProfile(); }
+      else sections.notfound.style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+      refreshHeader();
+      // on mobile, hide sidebar
+      hideSidebarMobile();
+    }
+
+    function refreshHeader(){
+      const a = getAuth();
+      if(a){
+        document.getElementById('signinBtnWrap').style.display = 'none';
+        document.getElementById('profileWrap').style.display = 'inline-block';
+        document.getElementById('profileName').textContent = a.name;
+      } else {
+        document.getElementById('signinBtnWrap').style.display = 'inline-block';
+        document.getElementById('profileWrap').style.display = 'none';
+      }
+    }
+
+    function toggleProfileDropdown(){
+      const dd = document.getElementById('profileDropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleSidebarMobile(){
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('active');
+      sb.style.display = sb.style.display === 'block' ? 'block' : 'block';
+    }
+    function hideSidebarMobile(){ const sb = document.getElementById('sidebar'); if(window.innerWidth <= 900) sb.classList.remove('active'); }
+
+    /***********************
+     * DOCTOR LIST + RATINGS
+     ***********************/
+    function renderDoctorList(){
+      const grid = document.getElementById('doctorGrid');
+      grid.innerHTML = '';
+      const docs = getDoctors();
+      const q = (document.getElementById('searchDocInput')?.value || '').toLowerCase();
+      const f = (document.getElementById('filterDept')?.value || '');
+      const filtered = docs.filter(d=>{
+        const matchQ = !q || d.name.toLowerCase().includes(q) || d.specialty.toLowerCase().includes(q);
+        const matchF = !f || d.specialty === f;
+        return matchQ && matchF;
+      });
+      if(filtered.length===0){
+        const no = document.createElement('div'); no.className='card'; no.textContent='No doctors found';
+        grid.appendChild(no);
+        return;
+      }
+      const ratings = getRatings();
+      filtered.forEach(d=>{
+        const card = document.createElement('div'); card.className = 'doc-card';
+        const avgArr = (ratings[d.id] || []).map(r=>r.rating);
+        const avg = avgArr.length ? (avgArr.reduce((a,b)=>a+b,0)/avgArr.length).toFixed(1) : null;
+        const avgHtml = avg ? `<div style="margin-top:8px"><small>Avg: </small> ${renderStarsStatic(Math.round(avg))} <small>(${avg})</small></div>` : '<div class="small" style="margin-top:8px">No ratings yet</div>';
+        card.innerHTML = `
+          <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="">
+          <div style="font-weight:700">${escapeHtml(d.name)}</div>
+          <div class="small">${escapeHtml(d.specialty)} · ${d.experience} yrs</div>
+          <div style="margin-top:8px;font-weight:700">₹${d.fee}</div>
+          ${avgHtml}
+          <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+            <button onclick="quickBook('${d.id}')">Book</button>
+            <button class="secondary-btn" onclick="openRatingModal('${d.id}','${escapeJs(d.name)}')">Rate</button>
+            <button class="secondary-btn" onclick="toggleReviews('${d.id}')">Reviews</button>
+          </div>
+          <div id="reviews-${d.id}" style="margin-top:10px;display:none"></div>
+        `;
+        grid.appendChild(card);
+        renderReviewPreview(d.id);
+      });
+    }
+
+    function renderStarsStatic(n){
+      let s='';
+      for(let i=1;i<=5;i++) s += `<span class="star ${i<=n?'active':''}">&#9733;</span>`;
+      return `<span class="stars">${s}</span>`;
+    }
+
+    function renderReviewPreview(docId){
+      const container = document.getElementById('reviews-'+docId);
+      if(!container) return;
+      const ratings = getRatings();
+      const arr = (ratings[docId] || []).slice(-3).reverse();
+      container.innerHTML = '';
+      if(arr.length===0){ container.innerHTML = '<div class="small">No reviews yet</div>'; return; }
+      arr.forEach(r=>{
+        const card = document.createElement('div'); card.className='card'; card.style.marginBottom='6px'; card.style.padding='8px';
+        card.innerHTML = `<div style="font-weight:700">${escapeHtml(r.by || 'Anonymous')} <span style="margin-left:8px">${renderStarsStatic(r.rating)}</span></div><div class="small" style="margin-top:6px">${escapeHtml(r.text || '')}</div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleReviews(id){
+      const el = document.getElementById('reviews-'+id);
+      if(!el) return;
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function openRatingModal(docId, docNameEscaped){
+      const docName = docNameEscaped;
+      const popup = document.createElement('div');
+      popup.style.position='fixed'; popup.style.left=0; popup.style.top=0; popup.style.right=0; popup.style.bottom=0;
+      popup.style.background='rgba(0,0,0,0.45)'; popup.style.display='flex'; popup.style.alignItems='center'; popup.style.justifyContent='center'; popup.style.zIndex='9999';
+      popup.innerHTML = `
+        <div class="card" style="max-width:540px;width:94%">
+          <h3 style="margin-top:0">Rate ${escapeHtml(docName)}</h3>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><div id="ratingStars" style="font-size:22px"></div><div class="small">(<span id="ratingValue">0</span>/5)</div></div>
+          <div style="margin-top:8px"><textarea id="ratingText" placeholder="Write feedback (optional)" style="width:100%;height:90px;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.08)"></textarea></div>
+          <div style="display:flex;gap:8px;margin-top:10px"><button id="submitRatingBtn">Submit</button><button class="secondary-btn" id="cancelRatingBtn">Cancel</button></div>
+        </div>
+      `;
+      document.body.appendChild(popup);
+
+      const starsContainer = document.getElementById('ratingStars');
+      let selected = 0;
+      function renderStarsInteractive(sel){
+        starsContainer.innerHTML='';
+        for(let i=1;i<=5;i++){
+          const span = document.createElement('span');
+          span.className = 'star ' + (i<=sel ? 'active' : '');
+          span.innerHTML = '&#9733;';
+          span.style.fontSize='24px';
+          span.style.cursor='pointer';
+          span.onclick = ()=>{ selected = i; document.getElementById('ratingValue').textContent = selected; renderStarsInteractive(selected); };
+          starsContainer.appendChild(span);
+        }
+      }
+      renderStarsInteractive(0);
+
+      document.getElementById('submitRatingBtn').onclick = ()=>{
+        const txt = document.getElementById('ratingText').value.trim();
+        if(selected === 0){ alert('Select star rating'); return; }
+        const auth = getAuth();
+        const ratings = getRatings();
+        if(!ratings[docId]) ratings[docId] = [];
+        ratings[docId].push({ rating: selected, text: txt, by: (auth?auth.name:'Guest'), date: (new Date()).toLocaleString() });
+        saveRatings(ratings);
+        document.body.removeChild(popup);
+        renderDoctorList();
+      };
+      document.getElementById('cancelRatingBtn').onclick = ()=>{ document.body.removeChild(popup); };
+    }
+
+    /***********************
+     * BOOKING & APPOINTMENTS
+     ***********************/
+    function populateBookDoctors(){
+      const sel = document.getElementById('bookDoctor');
+      if(!sel) return;
+      sel.innerHTML = '';
+      getDoctors().forEach(d=>{
+        const opt = document.createElement('option');
+        opt.value = d.id; opt.textContent = `${d.name} — ${d.specialty}`;
+        sel.appendChild(opt);
+      });
+    }
+    function clearBookingForm(){
+      document.getElementById('bookDate').value='';
+      document.getElementById('bookTime').value='';
+      document.getElementById('bookName').value='';
+      document.getElementById('bookEmail').value='';
+      const m = document.getElementById('bookMsg'); if(m){ m.textContent=''; }
+    }
+    function handleBooking(){
+      const docId = document.getElementById('bookDoctor').value;
+      const date = document.getElementById('bookDate').value;
+      const time = document.getElementById('bookTime').value;
+      const name = document.getElementById('bookName').value.trim();
+      const email = document.getElementById('bookEmail').value.trim();
+      const msg = document.getElementById('bookMsg');
+      msg.textContent=''; msg.style.color='#b00';
+      const auth = getAuth();
+      if(!docId || !date || !time){ msg.textContent='Please choose doctor, date & time'; return; }
+      const doc = getDoctors().find(d=>d.id===docId);
+      if(auth && auth.role === 'patient'){
+        const appt = { id:'a'+Date.now(), doctorId:docId, doctorName:doc.name, patientName:auth.name, patientEmail:auth.email, date, time, status:'pending' };
+        const arr = getAppointments(); arr.push(appt); saveAppointments(arr);
+        msg.style.color='green'; msg.textContent='Appointment requested (pending).';
+        populateDashboardPatient();
+        checkReminders();
+      } else {
+        if(!name || !email){ msg.textContent='Please enter name & email or login as patient'; return; }
+        const appt = { id:'a'+Date.now(), doctorId:docId, doctorName:doc.name, patientName:name, patientEmail:email, date, time, status:'pending' };
+        const arr = getAppointments(); arr.push(appt); saveAppointments(arr);
+        msg.style.color='green'; msg.textContent='Appointment requested (pending).';
+      }
+    }
+    function quickBook(id){ navigateTo('book'); setTimeout(()=>{ document.getElementById('bookDoctor').value = id; },120); }
+
+    /***********************
+     * RECORD SEARCH
+     ***********************/
+    function searchRecords(){
+      const email = document.getElementById('recordsEmail').value.trim();
+      const target = document.getElementById('recordsList');
+      target.innerHTML = '';
+      if(!email){ target.innerHTML = '<div class="card small">Enter an email to search.</div>'; return; }
+      const arr = JSON.parse(localStorage.getItem('care_records_'+email) || '[]');
+      if(arr.length===0){ target.innerHTML = '<div class="card small">No records found for this email.</div>'; return; }
+      arr.forEach(r=>{
+        const div = document.createElement('div'); div.className='record-item';
+        div.innerHTML = `<div><div style="font-weight:700">${escapeHtml(r.title)}</div><div class="small">${r.date} · uploaded by ${escapeHtml(r.from||'Doctor')}</div></div><div><a class="small">Download</a></div>`;
+        target.appendChild(div);
+      });
+    }
+
+    /***********************
+     * AUTH (signup/login/logout)
+     ***********************/
+    function renderSignupExtras(){
+      const extras = document.getElementById('signupExtras');
+      extras.innerHTML = '';
+      const role = document.querySelector('input[name="signupRole"]:checked')?.value || 'patient';
+      if(role === 'patient'){
+        extras.innerHTML = `<div class="form-row"><label>Age</label><input id="signupAge" type="number"></div>
+                            <div class="form-row"><label>Gender</label><select id="signupGender"><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></div>`;
+      } else {
+        extras.innerHTML = `<div class="form-row"><label>Specialty</label><input id="signupSpecialty"></div>
+                            <div class="form-row"><label>Experience (yrs)</label><input id="signupExp" type="number"></div>`;
+      }
+    }
+    document.addEventListener('change', (e)=>{ if(e.target && e.target.name==='signupRole') renderSignupExtras(); });
+
+    function emailExists(email){ return getUsers().some(u=>u.email === email); }
+
+    function signup(){
+      const role = document.querySelector('input[name="signupRole"]:checked').value;
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pw = document.getElementById('signupPassword').value;
+      const msg = document.getElementById('signupMsg'); msg.textContent=''; msg.style.color='#b00';
+      if(!name || !email || !pw){ msg.textContent='Fill required fields'; return; }
+      if(pw.length < 6){ msg.textContent='Password must be at least 6 characters'; return; }
+      if(emailExists(email)){ msg.textContent='Email already used'; return; }
+      const users = getUsers();
+      const user = { id:(role==='doctor'?'d':'p')+Date.now(), name, email, password:pw, role };
+      if(role==='patient'){ user.age = document.getElementById('signupAge').value; user.gender = document.getElementById('signupGender').value; }
+      else { user.specialty = document.getElementById('signupSpecialty').value; user.experience = document.getElementById('signupExp').value; }
+      users.push(user); saveUsers(users);
+      msg.style.color='green'; msg.textContent='Signup successful — please login.';
+      clearSignup();
+    }
+    function clearSignup(){ document.getElementById('signupName').value=''; document.getElementById('signupEmail').value=''; document.getElementById('signupPassword').value=''; renderSignupExtras(); }
+
+    function login(){
+      const email = document.getElementById('loginEmail').value.trim();
+      const pw = document.getElementById('loginPassword').value;
+      const role = document.getElementById('loginRole').value;
+      const msg = document.getElementById('loginMsg'); msg.textContent=''; msg.style.color='#b00';
+      if(!email || !pw){ msg.textContent='Fill fields'; return; }
+      const u = getUsers().find(x => x.email === email && x.role === role);
+      if(!u || u.password !== pw){ msg.textContent='Invalid credentials'; return; }
+      setAuth(u);
+      renderAfterAuth();
+      openProfile();
+      checkReminders();
+    }
+
+    function logout(){
+      clearAuth();
+      document.getElementById('sidebar').style.display = 'none';
+      hideAll();
+      sections.auth.style.display = 'block';
+      document.getElementById('profileDropdown').style.display = 'none';
+      refreshHeader();
+      // clear login fields
+      document.getElementById('loginEmail').value=''; document.getElementById('loginPassword').value='';
+    }
+
+    /***********************
+     * After auth: role-based sidebar
+     ***********************/
+    function renderAfterAuth(){
+      const a = getAuth();
+      if(!a) return;
+      const sb = document.getElementById('sidebar');
+      sb.style.display = 'block';
+      document.getElementById('sbWelcome').textContent = `Signed in as: ${a.name} (${a.role})`;
+
+      // hide both, then show relevant
+      document.getElementById('patientSidebar').style.display = 'none';
+      document.getElementById('doctorSidebar').style.display = 'none';
+
+      if(a.role === 'patient'){
+        document.getElementById('patientSidebar').style.display = 'block';
+      } else {
+        document.getElementById('doctorSidebar').style.display = 'block';
+      }
+      refreshHeader();
+    }
+
+    /***********************
+     * DASHBOARD -> tabs & content
+     ***********************/
+    function openProfile(){
+      const a = getAuth();
+      if(!a){ navigateTo('auth'); return; }
+      hideAll();
+      sections.dashboard.style.display = 'block';
+      document.getElementById('sidebar').style.display = 'block';
+      showDashboardTab(a.role, 'overview');
+      window.scrollTo({top:0,behavior:'smooth'});
+      refreshHeader();
+    }
+
+    function showDashboardTab(role,tab){
+      // clear actives
+      document.querySelectorAll('.side-link').forEach(x=>x.classList.remove('active'));
+      // hide all subsections under dashboard
+      const children = Array.from(document.querySelectorAll('#section-dashboard > div'));
+      children.forEach(c=>c.style.display='none');
+
+      if(role === 'patient'){
+        if(tab==='overview'){ document.getElementById('patient-overview').style.display='block'; document.getElementById('sbPatientHome').classList.add('active'); populateDashboardPatient(); }
+        if(tab==='doctors'){ document.getElementById('patient-doctors').style.display='block'; document.getElementById('sbFindDoctors').classList.add('active'); populatePatientDoctors(); }
+        if(tab==='book'){ document.getElementById('patient-book').style.display='block'; document.getElementById('sbBook').classList.add('active'); populateDashBookDoctors(); }
+        if(tab==='records'){ document.getElementById('patient-records').style.display='block'; document.getElementById('sbRecords').classList.add('active'); populatePatientRecords(); }
+      } else {
+        if(tab==='overview'){ document.getElementById('doctor-overview').style.display='block'; document.getElementById('sbDoctorHome').classList.add('active'); populateDashboardDoctor(); }
+        if(tab==='manage'){ document.getElementById('doctor-manage').style.display='block'; document.getElementById('sbManage').classList.add('active'); populateManageList(); }
+        if(tab==='upload'){ document.getElementById('doctor-upload').style.display='block'; document.getElementById('sbUpload').classList.add('active'); }
+        if(tab==='profile'){ document.getElementById('doctor-profile').style.display='block'; document.getElementById('sbProfile').classList.add('active'); populateDoctorProfile(); }
+      }
+      hideSidebarMobile();
+    }
+
+    /***********************
+     * PATIENT DASHBOARD functions
+     ***********************/
+    function populateDashboardPatient(){
+      const auth = getAuth(); if(!auth) return;
+      document.getElementById('patientWelcome').textContent = `${auth.name} · ${auth.email}`;
+      const arr = getAppointments().filter(a=>a.patientEmail === auth.email);
+      const container = document.getElementById('patientAppts'); container.innerHTML='';
+      if(arr.length===0) container.innerHTML = '<div class="small">No appointments yet.</div>';
+      arr.forEach(a=>{
+        const row = document.createElement('div'); row.className='appt-row';
+        row.innerHTML = `<div><div style="font-weight:700">${escapeHtml(a.doctorName)}</div><div class="small">${escapeHtml(a.date)} · ${escapeHtml(a.time)}</div></div><div style="text-align:right"><div style="font-weight:700;color:${a.status==='pending'?'#b97375':'#118c4a'}">${a.status.toUpperCase()}</div></div>`;
+        container.appendChild(row);
+      });
+    }
+
+    function populatePatientDoctors(){
+      const grid = document.getElementById('patientDoctorGrid'); grid.innerHTML='';
+      getDoctors().forEach(d=>{
+        const dom = document.createElement('div'); dom.className='doc-card';
+        dom.innerHTML = `<img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png"><div style="font-weight:700">${escapeHtml(d.name)}</div><div class="small">${escapeHtml(d.specialty)}</div><div style="margin-top:8px"><button onclick="dashBookFromGrid('${d.id}')">Book</button> <button class="secondary-btn" onclick="openRatingModal('${d.id}','${escapeJs(d.name)}')">Rate</button></div>`;
+        grid.appendChild(dom);
+      });
+    }
+
+    function populateDashBookDoctors(){
+      const sel = document.getElementById('dashBookDoctor'); if(!sel) return;
+      sel.innerHTML='';
+      getDoctors().forEach(d => { const opt=document.createElement('option'); opt.value=d.id; opt.textContent=`${d.name} — ${d.specialty}`; sel.appendChild(opt); });
+    }
+
+    function handleDashBooking(){
+      const auth = getAuth(); if(!auth || auth.role !== 'patient'){ alert('Please login as patient'); return; }
+      const docId = document.getElementById('dashBookDoctor').value;
+      const date = document.getElementById('dashBookDate').value; const time = document.getElementById('dashBookTime').value;
+      const msg = document.getElementById('dashBookMsg'); msg.textContent=''; msg.style.color='#b00';
+      if(!docId || !date || !time){ msg.textContent='Please fill fields'; return; }
+      const appt = { id:'a'+Date.now(), doctorId:docId, doctorName:getDoctors().find(d=>d.id===docId).name, patientName:auth.name, patientEmail:auth.email, date, time, status:'pending' };
+      const arr = getAppointments(); arr.push(appt); saveAppointments(arr);
+      msg.style.color='green'; msg.textContent='Requested. Doctor will confirm.';
+      populateDashboardPatient();
+      checkReminders();
+    }
+    function clearDashBook(){ document.getElementById('dashBookDate').value=''; document.getElementById('dashBookTime').value=''; document.getElementById('dashBookMsg').textContent=''; }
+    function dashBookFromGrid(docId){ showDashboardTab('patient','book'); setTimeout(()=>{ document.getElementById('dashBookDoctor').value = docId }, 80) }
+
+    function populatePatientRecords(){
+      const auth = getAuth(); if(!auth || auth.role !== 'patient') return;
+      const list = document.getElementById('patientRecordList'); list.innerHTML='';
+      const arr = JSON.parse(localStorage.getItem('care_records_'+auth.email) || '[]');
+      if(arr.length===0) list.innerHTML = '<div class="small">No records uploaded.</div>';
+      arr.forEach(r => {
+        const div = document.createElement('div'); div.className='record-item';
+        div.innerHTML = `<div><div style="font-weight:700">${escapeHtml(r.title)}</div><div class="small">${r.date} · uploaded by ${escapeHtml(r.from||'Doctor')}</div></div><div><a class="small">View</a></div>`;
+        list.appendChild(div);
+      });
+    }
+
+    /***********************
+     * DOCTOR DASHBOARD functions
+     ***********************/
+    function populateDashboardDoctor(){
+      const auth = getAuth(); if(!auth || auth.role !== 'doctor') return;
+      document.getElementById('doctorWelcome').textContent = `${auth.name} · ${auth.specialty || ''}`;
+      const arr = getAppointments().filter(a => a.doctorId === auth.id);
+      const el = document.getElementById('doctorAppts'); el.innerHTML='';
+      if(arr.length===0) el.innerHTML = '<div class="small">No appointment requests.</div>';
+      arr.forEach(a => {
+        const row = document.createElement('div'); row.className='appt-row';
+        row.innerHTML = `<div><div style="font-weight:700">${escapeHtml(a.patientName)}</div><div class="small">${escapeHtml(a.date)} · ${escapeHtml(a.time)} · ${escapeHtml(a.patientEmail)}</div></div><div style="text-align:right"><div style="font-weight:700;color:${a.status==='pending'?'#b97375':'#118c4a'}">${a.status.toUpperCase()}</div></div>`;
+        el.appendChild(row);
+      });
+    }
+
+    function populateManageList(){
+      const auth = getAuth(); if(!auth || auth.role !== 'doctor') return;
+      const arr = getAppointments().filter(a => a.doctorId === auth.id);
+      const el = document.getElementById('manageList'); el.innerHTML='';
+      if(arr.length===0) el.innerHTML = '<div class="small">No requests.</div>';
+      arr.forEach(a=>{
+        const div = document.createElement('div'); div.className='card'; div.style.marginBottom='8px';
+        const actions = a.status==='pending' ? `<button onclick="respondAppointment('${a.id}','confirmed')">Accept</button> <button class="secondary-btn" onclick="respondAppointment('${a.id}','rejected')">Reject</button>` : `<div style="font-weight:700;color:${a.status==='confirmed'?'#118c4a':'#b00'}">${a.status.toUpperCase()}</div>`;
+        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-weight:700">${escapeHtml(a.patientName)}</div><div class="small">${escapeHtml(a.date)} · ${escapeHtml(a.time)} · ${escapeHtml(a.patientEmail)}</div><div class="small">Status: ${escapeHtml(a.status)}</div></div><div>${actions}</div></div>`;
+        el.appendChild(div);
+      });
+    }
+    function respondAppointment(id, action){
+      const arr = getAppointments(); const idx = arr.findIndex(x=>x.id===id); if(idx===-1) return;
+      arr[idx].status = action; saveAppointments(arr); populateManageList(); populateDashboardDoctor(); populateDashboardPatient();
+    }
+
+    /***********************
+     * UPLOAD RECORDS (doctor)
+     ***********************/
+    function uploadRecord(){
+      const auth = getAuth(); if(!auth || auth.role !== 'doctor'){ document.getElementById('uploadMsg').textContent='Login as doctor'; return; }
+      const email = document.getElementById('uploadPatientEmail').value.trim();
+      const title = document.getElementById('uploadTitle').value.trim();
+      const msg = document.getElementById('uploadMsg'); msg.textContent=''; msg.style.color='#b00';
+      if(!email || !title){ msg.textContent='Fill fields'; return; }
+      const arr = JSON.parse(localStorage.getItem('care_records_'+email) || '[]');
+      arr.push({ title, date: new Date().toLocaleDateString(), from: auth.name });
+      localStorage.setItem('care_records_'+email, JSON.stringify(arr));
+      msg.style.color='green'; msg.textContent='Record uploaded (dummy)';
+      document.getElementById('uploadPatientEmail').value=''; document.getElementById('uploadTitle').value='';
+    }
+    function clearUpload(){ document.getElementById('uploadPatientEmail').value=''; document.getElementById('uploadTitle').value=''; document.getElementById('uploadMsg').textContent=''; }
+
+    /***********************
+     * DOCTOR PROFILE edit
+     ***********************/
+    function populateDoctorProfile(){
+      const auth = getAuth(); if(!auth || auth.role !== 'doctor') return;
+      document.getElementById('docProfName').value = auth.name || '';
+      document.getElementById('docProfSpecialty').value = auth.specialty || '';
+      document.getElementById('docProfExp').value = auth.experience || '';
+    }
+    function saveDoctorProfile(){
+      const auth = getAuth(); if(!auth || auth.role !== 'doctor') return;
+      const name = document.getElementById('docProfName').value.trim();
+      const spec = document.getElementById('docProfSpecialty').value.trim();
+      const exp = document.getElementById('docProfExp').value;
+      if(!name){ document.getElementById('docProfMsg').textContent='Name required'; return; }
+      const users = getUsers(); const idx = users.findIndex(u=>u.email===auth.email);
+      if(idx>-1){ users[idx].name = name; users[idx].specialty = spec; users[idx].experience = exp; saveUsers(users); setAuth(users[idx]); document.getElementById('docProfMsg').textContent='Saved'; renderAfterAuth(); }
+    }
+    function resetDoctorProfile(){ populateDoctorProfile(); }
+
+    /***********************
+     * REMINDERS toast
+     ***********************/
+    function checkReminders(){
+      const auth = getAuth();
+      if(!auth) return;
+      const today = new Date();
+      const y = today.getFullYear(), m = (today.getMonth()+1).toString().padStart(2,'0'), d = today.getDate().toString().padStart(2,'0');
+      const todayStr = `${y}-${m}-${d}`;
+      const appts = getAppointments();
+      if(auth.role === 'patient'){
+        const todays = appts.filter(a => a.patientEmail === auth.email && a.date === todayStr);
+        if(todays.length){
+          const body = todays.map(t=>`<div style="margin-bottom:6px"><div style="font-weight:700">${escapeHtml(t.doctorName)}</div><div class="small">${escapeHtml(t.date)} · ${escapeHtml(t.time)}</div></div>`).join('');
+          showToast('You have appointment(s) today', body);
+        }
+      } else if(auth.role === 'doctor'){
+        const todays = appts.filter(a => a.doctorId === auth.id && a.date === todayStr);
+        if(todays.length){
+          const body = todays.map(t=>`<div style="margin-bottom:6px"><div style="font-weight:700">${escapeHtml(t.patientName)}</div><div class="small">${escapeHtml(t.date)} · ${escapeHtml(t.time)} · ${escapeHtml(t.patientEmail)}</div></div>`).join('');
+          showToast('Today\'s requests', body);
+        }
+      }
+    }
+
+    function showToast(title, bodyHtml){
+      const wrap = document.getElementById('toastWrap');
+      wrap.innerHTML = `<div class="toast-card card"><div style="display:flex;align-items:center;gap:10px"><div style="font-weight:700">${escapeHtml(title)}</div><div style="margin-left:auto"><button class="secondary-btn" onclick="hideToast()">Dismiss</button></div></div><div style="margin-top:8px">${bodyHtml}</div></div>`;
+      wrap.style.display='block';
+      setTimeout(()=>{ wrap.style.display='none'; }, 18000);
+    }
+    function hideToast(){ document.getElementById('toastWrap').style.display='none'; }
+
+    /***********************
+     * UTIL: escaping to avoid injection when building innerHTML
+     ***********************/
+    function escapeHtml(s){ if(!s && s!==0) return ''; return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+
+    /***********************
+     * INIT / BOOT
+     ***********************/
+    function populateFilterOptions(){
+      const sel = document.getElementById('filterDept'); if(!sel) return;
+      sel.innerHTML = '<option value="">All Departments</option>';
+      const specialties = [...new Set(getDoctors().map(d=>d.specialty))];
+      specialties.forEach(s=>{ const o = document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
+    }
+
+    function boot(){
+      initData();
+      // theme
+      const saved = localStorage.getItem('care_theme') || 'light'; applyTheme(saved);
+      // initial tips
+      refreshHealthTipNow();
+      startTipAuto();
+      // populate lists
+      populateFilterOptions();
+      renderDoctorList();
+      populateBookDoctors();
+      // header
+      refreshHeader();
+      // default page
+      navigateTo('home');
+      // if logged in persist UI
+      const a = getAuth(); if(a) renderAfterAuth();
+    }
+    window.addEventListener('load', boot);
+
+    /***********************
+     * Expose some functions for inline onclick
+     ***********************/
+    window.navigateTo = navigateTo;
+    window.quickBook = quickBook;
+    window.handleBooking = handleBooking;
+    window.clearBookingForm = clearBookingForm;
+    window.searchRecords = searchRecords;
+    window.login = login;
+    window.signup = signup;
+    window.clearSignup = clearSignup;
+    window.openProfile = openProfile;
+    window.showDashboardTab = showDashboardTab;
+    window.logout = logout;
+    window.handleDashBooking = handleDashBooking;
+    window.clearDashBook = clearDashBook;
+    window.uploadRecord = uploadRecord;
+    window.saveDoctorProfile = saveDoctorProfile;
+    window.respondAppointment = respondAppointment;
+    window.toggleProfileDropdown = toggleProfileDropdown;
+    window.toggleSidebarMobile = toggleSidebarMobile;
+    window.refreshHealthTipNow = refreshHealthTipNow;
+    window.toggleTipAutoRefresh = toggleTipAutoRefresh;
+    window.hideToast = hideToast;
+
+  </script>
+</body>
+</html>
