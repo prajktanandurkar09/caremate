@@ -37,22 +37,6 @@ CareMate is a web-based healthcare platform that connects patients and doctors t
 - **APIs:** REST-based architecture (conceptual)  
 - **Deployment:** Netlify  
 
----
- 
-## 📁 Project Structure
-
-CareMate/
-├── index.html
-├── login.html
-├── signup.html
-├── patient-dashboard.html
-├── doctor-dashboard.html
-├── css/
-│ └── styles.css
-├── js/
-│ └── script.js
-└── assets/
-
 
 ---
 
